@@ -111,8 +111,8 @@ d3.csv("neg.csv", function(error, data) {
       .attr("class", "bar")
       .attr("x", function(d) { return xb(d.jaar); })
       .attr("width", xb.bandwidth())
-      .attr("y", function(d) { return yScale(d.dso); })
-      .attr("height", function(d) { return height - yScale(d.dso); });
+      .attr("y", function(d) { return height - Math.max(0, yScale(d.dso); }) 
+      .attr("height", function(d) { return Math.abs(yScale(d.dso); });
   
   	// add the xB Axis
   chartNeg.append("g")
