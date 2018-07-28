@@ -56,9 +56,7 @@ var xb = d3.scaleBand()
 var yb = d3.scaleLinear()
         .range([height, 0]);
 
-var yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d) { return d.dso; })])
-        .range([0, height]);
+
 	
 	// ranges line chart//
 var xl = d3.scaleTime()
@@ -94,8 +92,11 @@ d3.csv("neg.csv", function(error, data) {
   data.forEach(function(d) {
     d.dso = +d.dso;
   });
-	
-  	// Scale the range of the data in the domains
+  var yScale = d3.scaleLinear()
+        .domain([0, d3.max(data, function(d) { return d.dso; })])
+        .range([0, height]);	
+  
+	// Scale the range of the data in the domains
   xb.domain(data.map(function(d) { return d.jaar; }));
   //ybneg.domain([d3.min(data, function(d) { return d.dso; }), d3.max(data, function(d) { return d.dso; })]);
   var yAxisScale = d3.scaleLinear()
