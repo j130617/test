@@ -96,9 +96,9 @@ d3.csv("neg.csv", function(error, data) {
 	
   	// Scale the range of the data in the domains
   xb.domain(data.map(function(d) { return d.jaar; }));
-  var ybneg = yb.domain([d3.min(data, function(d) { return d.dso; }), d3.max(data, function(d) { return d.dso; })]);
+  var ybneg1 = ybneg.domain([d3.min(data, function(d) { return d.dso; }), d3.max(data, function(d) { return d.dso; })]);
 	
-  var ybneg = ybneg.range([chartHeight - yb(d3.min(data, function(d) { return d.dso; }), 0 ]);
+  var ybneg2 = ybneg1.range([chartHeight - ybneg(d3.min(data, function(d) { return d.dso; }), 0 ]);
   
 	// append the rectangles for the bar chart
   chartNeg.selectAll(".bar")
@@ -119,7 +119,7 @@ d3.csv("neg.csv", function(error, data) {
   	// add the yB Axis
   chartNeg.append("g")
       .attr("class", "axis")  
-      .call(d3.axisLeft(yb));
+      .call(d3.axisLeft(ybneg2));
   
 	// Add a small label for the graph name VERTICAAL.
   chartNeg.append("text")
