@@ -121,24 +121,16 @@ d3.csv("neg.csv", function(error, data) {
       .attr("class", "axis")  
       .call(d3.axisLeft(ybneg));
   
-	// Add a small label for the graph name VERTICAAL.
-  chartNeg.append("text")
-      .attr("class", "y axis")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("DSO");  
 	
 	// Add a small label for the graph name HORIZONTAAL.
-  /* chartDSO.append("text")
+ chartNeg.append("text")
       .attr("class", "title")
       .attr("x", 10)
       .attr("y", -10)
       .attr("font-weight", "bold")
       .style("text-anchor", "start")
       .style("font-size", 9)
-      .text("DSO"); */ 
+      .text("DSO");  
    
 });
 </script>
