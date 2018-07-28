@@ -1,83 +1,81 @@
 <<!DOCTYPE html>
 <meta charset="utf-8">
 <style> /* set the CSS */
+<title>Land Ocean Temperature Index</title>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
 
 body { font: 12px Arial;}
+	
+div#title {
+    width: 880px;
+    margin: 10px auto 0;
+    padding: 5px 20px;
+    background-color: grey;
+    border: 1px solid grey;
+    color: white;
+    box-shadow: 3px 0px 3px lightgrey;
+}
 
+h1 {
+    font-family: Georgia, serif;
+    font-size: 1.4em;
+    letter-spacing: 1px;
+    margin: 0 auto;
+}
 
+h2 {
+    font-size: .8em;
+    font-weight:100;
+    margin: .3em auto;
+}
 
-			div#title {
-			    width: 880px;
-			    margin: 10px auto 0;
-			    padding: 5px 20px;
-			    background-color: grey;
-			    border: 1px solid grey;
-			    color: white;
-			    box-shadow: 3px 0px 3px lightgrey;
-			}
+div#chart {
+	width:920px;
+	margin: 0 auto 1em;
+	border: 1px solid grey;
+	box-shadow: 3px 3px 3px lightgrey;
+}
 
-			h1 {
-			    font-family: Georgia, serif;
-			    font-size: 1.4em;
-			    letter-spacing: 1px;
-			    margin: 0 auto;
-			}
+.bar.positive {
+  fill: darkred;
+}
 
-			h2 {
-				font-size: .8em;
-				font-weight:100;
-				margin: .3em auto;
-			}
+.bar.negative {
+  fill: steelblue;
+}
 
-			div#chart {
-				width:920px;
-				margin: 0 auto 1em;
-				border: 1px solid grey;
-				box-shadow: 3px 3px 3px lightgrey;
-			}
+g.infowin {
+  fill: grey;
+}
 
-			.bar.positive {
-			  fill: darkred;
-			}
+g.infowin text,
+.axis text {
+  font: 11px sans-serif;
+  fill:grey;
+}
 
-			.bar.negative {
-			  fill: steelblue;
-			}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
 
-			g.infowin {
-				fill: grey;
-			}
+path.domain {
+   stroke:none;
+}
 
-			g.infowin text,
-			.axis text {
-			  font: 11px sans-serif;
-			  fill:grey;
-			}
+</style>
+</head>
+<body>
 
-			.axis path,
-			.axis line {
-			  fill: none;
-			  stroke: #000;
-			  shape-rendering: crispEdges;
-			}
-
-			path.domain {
-				stroke:none;
-			}
-
-		</style>
-	</head>
-	<body>
-
-
-
-		<div id="title">
-			<h1>
-				Land &amp; Ocean Temperature Annual Index, 1880 - 2015
-			</h1>
-			<h2>Base period: 1951-1980 | Hover your cursor over bar to get exact figures</h2>
-		</div>
-		<div id="chart"></div>
+<div id="title">
+	<h1>
+	Land &amp; Ocean Temperature Annual Index, 1880 - 2015
+	</h1>
+	<h2>Base period: 1951-1980 | Hover your cursor over bar to get exact figures</h2>
+	</div>
+	<div id="chart"></div>
 
 
 </style>
