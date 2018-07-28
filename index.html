@@ -97,7 +97,7 @@ d3.csv("neg.csv", function(error, data) {
 	
   	// Scale the range of the data in the domains
   xb.domain(data.map(function(d) { return d.jaar; }));
-  ybneg.domain([d3.min(data, function(d) { return d.dso; }), d3.max(data, function(d) { return d.dso; })]);
+  //ybneg.domain([d3.min(data, function(d) { return d.dso; }), d3.max(data, function(d) { return d.dso; })]);
   var yAxisScale = d3.scaleLinear()
                      .domain([d3.min(data, function(d) { return d.dso; }), d3.max(data, function(d) { return d.dso; })])
                      .range([height - yScale(d3.min(data, function(d) { return d.dso; })), 0 ]);	
