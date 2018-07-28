@@ -56,8 +56,9 @@ var xb = d3.scaleBand()
 var yb = d3.scaleLinear()
         .range([height, 0]);
 
-var ybneg = d3.scaleLinear()
-        .range([height, 0]);
+var yScale = d3.scaleLinear()
+        .domain([0, d3.max(data, function(d) { return d.dso; })])
+        .range([0, height]);
 	
 	// ranges line chart//
 var xl = d3.scaleTime()
@@ -97,7 +98,9 @@ d3.csv("neg.csv", function(error, data) {
   	// Scale the range of the data in the domains
   xb.domain(data.map(function(d) { return d.jaar; }));
   ybneg.domain([d3.min(data, function(d) { return d.dso; }), d3.max(data, function(d) { return d.dso; })]);
-	
+  var yAxisScale = d3.scaleLinear()
+                     .domain([d3.min(data, function(d) { return d.dso; }), d3.max(data, function(d) { return d.dso; })])
+                     .range([height - yScale(d3.min(data, function(d) { return d.dso; })), 0 ]);	
   
   
 	// append the rectangles for the bar chart
@@ -107,8 +110,8 @@ d3.csv("neg.csv", function(error, data) {
       .attr("class", "bar")
       .attr("x", function(d) { return xb(d.jaar); })
       .attr("width", xb.bandwidth())
-      .attr("y", function(d) { return ybneg(d.dso); })
-      .attr("height", function(d) { return height - ybneg(d.dso); });
+      .attr("y", function(d) { return yScale(d.dso); })
+      .attr("height", function(d) { return height - yScale(d.dso); });
   
   	// add the xB Axis
   chartNeg.append("g")
@@ -119,7 +122,7 @@ d3.csv("neg.csv", function(error, data) {
   	// add the yB Axis
   chartNeg.append("g")
       .attr("class", "axis")  
-      .call(d3.axisLeft(ybneg));
+      .call(d3.axisLeft(yAxisScale));
   
 	
 	// Add a small label for the graph name HORIZONTAAL.
