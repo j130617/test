@@ -107,8 +107,8 @@ d3.csv("neg.csv", function(error, data) {
       .attr("class", "bar")
       .attr("x", function(d) { return xb(d.jaar); })
       .attr("width", xb.bandwidth())
-      .attr("y", function(d) { return ybmeg2(d.dso); })
-      .attr("height", function(d) { return height - ybneg2(d.dso); });
+      .attr("y", function(d) { return ybneg(d.dso); })
+      .attr("height", function(d) { return height - ybneg(d.dso); });
   
   	// add the xB Axis
   chartNeg.append("g")
@@ -119,7 +119,7 @@ d3.csv("neg.csv", function(error, data) {
   	// add the yB Axis
   chartNeg.append("g")
       .attr("class", "axis")  
-      .call(d3.axisLeft(ybneg2));
+      .call(d3.axisLeft(ybneg));
   
 	// Add a small label for the graph name VERTICAAL.
   chartNeg.append("text")
