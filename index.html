@@ -1,141 +1,222 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style> /* set the CSS */
-body { font: 12px Arial;}
-	/* opmaak linechart*/
-path { 
-    stroke: steelblue;
-    stroke-width: 2;
-    fill: none;
-}
-.axis path,
-.axis line {
-    fill: none;
-    stroke: grey;
-    stroke-width: 1;
-    shape-rendering: crispEdges;
-}
-	/*opmaak legenda*/
-.legend {
-    font-size: 10px;
-    /*font-weight: bold;*/
-    text-anchor: middle;
-}
-	/* opmaak barchart*/
-.bar { fill: steelblue; }
-	
-	/* opmaak tabel*/
-th { text-align: left; }
-/*th, td { padding: 1px 4px;}*/
-th, td { padding: 0 1em 0.5ex 0;}
-th.center, td.center { text-align: center; }
-/*th.num, td.num { text-align: center; }*/
-th.num, td.num { text-align: right; }
-	
-</style>
-<body>
-	
-<!-- load the d3.js library -->    	
-<script src="//d3js.org/d3.v4.min.js"></script>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Land Ocean Temperature Index</title>
+		<!-- // <script type="text/javascript" src="../d3.v3.js"></script> -->
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+		<style type="text/css">
 
-<script>
-	// Set the dimensions of the canvas / graph
-//var margin = {top: 10, right: 20, bottom: 40, left: 50},//
-var margin = {top: 40, right: 50, bottom: 50, left: 75},
-    width = 500 - margin.left - margin.right,
-    height = 275 - margin.top - margin.bottom;
-	// Parse the date / time
-var parseDate1 = d3.timeParse("%b %Y");
-var parseDate2 = d3.timeParse("%Y");
-	
-	// set the ranges REGULIER xb en yb = bar chart /  xl en yl = line graph / xbg, ybg en zbg = bar chart grouped
-	// ranges bar chart // 
-var xb = d3.scaleBand()
-        .range([0, width])
-        .padding(0.1);
-var yb = d3.scaleLinear()
-        .range([height, 0]);
+			html, body, * {
+				font-family: Arial, sans-serif;
+				text-align: center;
+				font-size: 14px 65%;
+			}
+
+			div#title {
+			    width: 880px;
+			    margin: 10px auto 0;
+			    padding: 5px 20px;
+			    background-color: grey;
+			    border: 1px solid grey;
+			    color: white;
+			    box-shadow: 3px 0px 3px lightgrey;
+			}
+
+			h1 {
+			    font-family: Georgia, serif;
+			    font-size: 1.4em;
+			    letter-spacing: 1px;
+			    margin: 0 auto;
+			}
+
+			h2 {
+				font-size: .8em;
+				font-weight:100;
+				margin: .3em auto;
+			}
+
+			div#chart {
+				width:920px;
+				margin: 0 auto 1em;
+				border: 1px solid grey;
+				box-shadow: 3px 3px 3px lightgrey;
+			}
+
+			.bar.positive {
+			  fill: darkred;
+			}
+
+			.bar.negative {
+			  fill: steelblue;
+			}
+
+			g.infowin {
+				fill: grey;
+			}
+
+			g.infowin text,
+			.axis text {
+			  font: 11px sans-serif;
+			  fill:grey;
+			}
+
+			.axis path,
+			.axis line {
+			  fill: none;
+			  stroke: #000;
+			  shape-rendering: crispEdges;
+			}
+
+			path.domain {
+				stroke:none;
+			}
+
+		</style>
+	</head>
+	<body>
 
 
-	
-	// ranges line chart//
-var xl = d3.scaleTime()
-	.range([0, width]);  
-var yl = d3.scaleLinear()
-	.range([height, 0]);
-	
-	// ranges grouped bar chart//
-var xbg0 = d3.scaleBand()
-    .rangeRound([0, width])
-    .paddingInner(0.1);
-var xbg1 = d3.scaleBand()
-    .padding(0.05);
-var ybg = d3.scaleLinear()
-    .rangeRound([height, 0]);
-var zbg = d3.scaleOrdinal(d3.schemeCategory20)
-//var zbg = d3.scaleOrdinal()
-	//.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-	
-	//------------------------------------------------------------------>>>>> SIMPLE BAR CHART NEGATIVE VALUES
-	// Adds the chart canvas          
-var chartNeg = d3.select("body").append("svg")
+
+		<div id="title">
+			<h1>
+				Land &amp; Ocean Temperature Annual Index, 1880 - 2015
+			</h1>
+			<h2>Base period: 1951-1980 | Hover your cursor over bar to get exact figures</h2>
+		</div>
+		<div id="chart"></div>
+
+		<script type="text/javascript" src="./horizontal-bar-temperatures.js"></script>
+
+var margin = {
+        top: 10,
+        right: 10,
+        bottom: 20,
+        left: 30
+    },
+    width = 920 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .2);
+
+
+var xAxisScale = d3.scale.linear()
+    .domain([1880, 2015])
+    .range([ 0, width]);
+
+var xAxis = d3.svg.axis()
+    .scale(xAxisScale)
+    .orient("bottom")
+    .tickFormat(d3.format("d"));
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg = d3.select("#chart").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", 
-	  "translate(" + margin.left + "," + margin.top + ")");
-	// Get the data
-d3.csv("neg.csv", function(error, data) {
-  if (error) throw error;
-  
-  	// format the data
-  data.forEach(function(d) {
-    d.dso = +d.dso;
-  });
-  var yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d) { return d.dso; })])
-        .range([0, height]);	
-  
-	// Scale the range of the data in the domains
-  xb.domain(data.map(function(d) { return d.jaar; }));
-  //ybneg.domain([d3.min(data, function(d) { return d.dso; }), d3.max(data, function(d) { return d.dso; })]);
-  var yAxisScale = d3.scaleLinear()
-                     .domain([d3.min(data, function(d) { return d.dso; }), d3.max(data, function(d) { return d.dso; })])
-                     .range([height - yScale(d3.min(data, function(d) { return d.dso; })), 0 ]);	
-  
-  
-	// append the rectangles for the bar chart
-  chartNeg.selectAll(".bar")
-      .data(data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return xb(d.jaar); })
-      .attr("width", xb.bandwidth())
-      .attr("y", function(d) { return height - Math.max(0, yScale(d.dso); }) 
-      .attr("height", function(d) { return Math.abs(yScale(d.dso); });
-  
-  	// add the xB Axis
-  chartNeg.append("g")
-      .attr("class", "axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(xb));
-  
-  	// add the yB Axis
-  chartNeg.append("g")
-      .attr("class", "axis")  
-      .call(d3.axisLeft(yAxisScale));
-  
-	
-	// Add a small label for the graph name HORIZONTAAL.
- chartNeg.append("text")
-      .attr("class", "title")
-      .attr("x", 10)
-      .attr("y", -10)
-      .attr("font-weight", "bold")
-      .style("text-anchor", "start")
-      .style("font-size", 9)
-      .text("DSO");  
-   
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("Land-Ocean-TempIndex-YR.csv", type, function(error, data) {
+    x.domain(data.map(function(d) {
+        return d.Year;
+    }));
+    y.domain(d3.extent(data, function(d) {
+        return d.Celsius;
+    })).nice();
+
+
+    svg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", function(d) {
+
+            if (d.Celsius < 0){
+                return "bar negative";
+            } else {
+                return "bar positive";
+            }
+
+        })
+        .attr("data-yr", function(d){
+            return d.Year;
+        })
+        .attr("data-c", function(d){
+            return d.Celsius;
+        })
+        .attr("title", function(d){
+            return (d.Year + ": " + d.Celsius + " °C")
+        })
+        .attr("y", function(d) {
+
+            if (d.Celsius > 0){
+                return y(d.Celsius);
+            } else {
+                return y(0);
+            }
+
+        })
+        .attr("x", function(d) {
+            return x(d.Year);
+        })
+        .attr("width", x.rangeBand())
+        .attr("height", function(d) {
+            return Math.abs(y(d.Celsius) - y(0));
+        })
+        .on("mouseover", function(d){
+            // alert("Year: " + d.Year + ": " + d.Celsius + " Celsius");
+            d3.select("#_yr")
+                .text("Year: " + d.Year);
+            d3.select("#degrree")
+                .text(d.Celsius + "°C");
+        });
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .append("text")
+        .text("°Celsius")
+        .attr("transform", "translate(15, 40), rotate(-90)")
+
+    svg.append("g")
+        .attr("class", "X axis")
+        .attr("transform", "translate(" + (margin.left - 6.5) + "," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .append("line")
+        .attr("y1", y(0))
+        .attr("y2", y(0))
+        .attr("x2", width);
+
+    svg.append("g")
+        .attr("class", "infowin")
+        .attr("transform", "translate(50, 5)")
+        .append("text")
+        .attr("id", "_yr");
+
+    svg.append("g")
+        .attr("class", "infowin")
+        .attr("transform", "translate(110, 5)")
+        .append("text")
+        .attr("id","degrree");
+
 });
+
+
+function type(d) {
+    d.Celsius = +d.Celsius;
+    return d;
+}
 </script>
 </body>
