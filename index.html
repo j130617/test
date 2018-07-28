@@ -194,6 +194,18 @@ d3.csv("Land-Ocean-TempIndex-YR.csv", type, function(error, data) {
         .attr("y2", y(0))
         .attr("x2", width);
 
+    svg.append("g")
+        .attr("class", "infowin")
+        .attr("transform", "translate(50, 5)")
+        .append("text")
+        .attr("id", "_yr");
+
+    svg.append("g")
+        .attr("class", "infowin")
+        .attr("transform", "translate(110, 5)")
+        .append("text")
+        .attr("id","degrree");
+
 });
 
 
